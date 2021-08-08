@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Form, Button, Container, Row, Col, Alert } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Row,
+  Col,
+  Alert,
+  Modal,
+} from "react-bootstrap";
 import { BsFillCursorFill } from "react-icons/bs";
 import City from "./components/City";
 export default class App extends Component {
@@ -14,6 +22,7 @@ export default class App extends Component {
         exists: false,
         msg: "",
       },
+      sh: false,
     };
   }
 
@@ -29,9 +38,26 @@ export default class App extends Component {
       .catch((err) =>
         this.setState({ err: { exists: true, msg: "error getting data" } })
       );
-    console.log(this.state);
   };
 
+  hideModal = () => {
+    this.setState({
+      sh: false,
+    });
+  };
+  showMap = (obj) => {
+    this.setState({
+      sh: true,
+      selectedCity: obj.props.cityName,
+      modLo: obj.props.cityLon,
+      modLa: obj.props.cityLat,
+    });
+  };
+  handleHide = () => {
+    this.setState({
+      sh: false,
+    });
+  };
   render() {
     return (
       <Container fluid>
@@ -65,7 +91,11 @@ export default class App extends Component {
         </Row>
         <Row className="d-flex flex-wrap justify-content-center h-100">
           {this.state.cityInfo.length > 0 ? (
-            <Alert variant="info" className="text-center p-5 mt-5 align-middle" style={{height: '1rem'}}>
+            <Alert
+              variant="info"
+              className="text-center p-5 mt-5 align-middle"
+              style={{ height: "1rem" }}
+            >
               Results for <strong>{this.state.cityName}</strong>
             </Alert>
           ) : undefined}
@@ -78,10 +108,25 @@ export default class App extends Component {
                 cityLon={lon}
                 cityLat={lat}
                 cityDisp={display_name}
+                showMap={this.showMap}
               />
             );
           })}
         </Row>
+
+        <Modal show={this.state.sh} onHide={this.handleHide} size='lg' className='m-auto'>
+          <Modal.Header>
+            <Modal.Title className="align-middle">
+              {this.state.selectedCity}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <img src={`https://maps.locationiq.com/v3/staticmap?key=pk.4a782b6f22a6f448625817dfd828280a&center=${this.state.modLa},${this.state.modLo}&zoom=15`} alt='' className='img-responsive text-center m-auto'/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.hideModal}>Hide</Button>
+          </Modal.Footer>
+        </Modal>
       </Container>
     );
   }

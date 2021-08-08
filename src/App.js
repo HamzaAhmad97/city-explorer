@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { BsFillCursorFill } from "react-icons/bs";
+export default class App extends Component {
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  constructor(){
+    super();
+    this.state = {
+      cityName : '',
+      cityInfo: {},
+      err: {
+        exist: false,
+        msg: '',
+      },
+    };
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.setState({
+      cityName: e.target.children[0].children[1].value,
+    });
+    let url = `https://eu1.locationiq.com/v1/search.php?key=pk.4a782b6f22a6f448625817dfd828280a&city=${this.state.cityName}&format=json`;
+    axios.get(url).then(res => this.setState({cityInfo: res.data})).catch(err => this.setState({err: {exist: true, msg: 'error getting data'}}));
+    console.log(this.state);
+  }
+
+  render() {
+    return (
+      <Container fluid>
+        <h1 className="text-center m-5">
+          City Explorer <BsFillCursorFill />{" "}
+        </h1>
+        <Row className="d-flex justify-content-center flex-column align-items-center">
+          <Col xl="3" xs='6'>
+            <Form onSubmit={(e) => this.handleSubmit(e)} className='d-flex flex-column border border-primary rounded p-3 align-self-center'>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Enter the city name to start</Form.Label>
+                <input id='cityInput' type='text' placeholder="Los Angeles" className='w-100'></input>
+              </Form.Group>
+              <Button variant="primary" type="submit" className='align-self-center'>
+                Explore!
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 }
-
-export default App;

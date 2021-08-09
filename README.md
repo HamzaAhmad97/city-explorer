@@ -20,6 +20,8 @@ I had a City component that represents every card that gets showed, this city co
 ## Change Log
 
 8-8-2021 > The basic structure of the website is established, and although it needs some breaking down into smaller or more reusable components, the overall functionality is working, you can find the cities that match your entry, as you also can show the map of the city once you click on it. The style needs some inhancements since it is very simple.
+
+9-8-2021 > I have added another component which is the Weather component, and added another request from my api using axios in the first .then(), so now the app shows the weather info for the selected city at various dates.
 ## Credit and Collaborations
 
 Hamza Ahmad and Shukri Jallad

@@ -1,18 +1,22 @@
 import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+require("dotenv").config();
+const PORT = process.env.PORT;
+//const LIQ_TOKEN = process.env.LIQ_TOKEN;
 export default class Fform extends Component {
   constructor() {
     super();
     this.state = {
-      display_name: '',
-      lon: '',
-      lat: '',
+      display_name: "",
+      lon: "",
+      lat: "",
       shErr: false,
-      cityName: '',
+      cityName: "",
       errExists: false,
-      errMessage: '',
-    }
+      errMessage: "",
+      wData: [],
+    };
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -23,10 +27,22 @@ export default class Fform extends Component {
     axios
       .get(url)
       .then((res) => {
-        this.setState({ display_name: res.data[0].display_name, errExists: false, lat: res.data[0].lat, lon: res.data[0].lon });
+        this.setState({
+          display_name: res.data[0].display_name,
+          errExists: false,
+          lat: res.data[0].lat,
+          lon: res.data[0].lon,
+        });
         //console.log(res.data[0]);
         this.props.getCityData(this.state);
-        return res;
+        let urlW = `http://localhost:8080/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.cityName}`;
+        axios
+          .get(urlW)
+          .then((res) => {
+            this.setState({ wData: res.data });
+            console.log(res.data);
+          })
+          .catch((err) => console.log("errrrrrrrrrrrrror"));
       })
       .catch((err) => {
         if (err.response) {
@@ -38,7 +54,7 @@ export default class Fform extends Component {
           this.props.getCityData(this.state);
         }
       });
-      
+    //let urlW = `http://localhost:${PORT}/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.cityName}`;
   };
   render() {
     return (

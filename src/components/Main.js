@@ -4,6 +4,8 @@ import Fform from "./Fform";
 import Banner from "./Banner";
 import City from "./City";
 import Err from "./Err";
+import Weather from "./Weather";
+//import Weather from "./Weather";
 export default class Main extends Component {
   constructor() {
     super();
@@ -16,6 +18,8 @@ export default class Main extends Component {
       errExists: false,
       errMessage: "",
       shCity: false,
+      shWeather: false,
+      wData: [],
     };
   }
   getCityData = (obj) => {
@@ -25,14 +29,16 @@ export default class Main extends Component {
     if (this.state.errExists) {
       this.setState({
         shCity: false,
+        shWeather: true,
       });
     } else {
       this.setState({
         shCity: true,
+        shWeather: true,
       });
     }
-
-    console.log(this.state);
+    console.log(this.state.wData.length);
+    console.log(this.state.wData);
   };
   render() {
     return (
@@ -50,6 +56,9 @@ export default class Main extends Component {
             />
           ) : undefined}
         </Row>
+
+        <Weather data={this.state.wData} shW={this.state.shCity}/>
+
         <Row>{!this.state.shCity ? <Banner /> : undefined}</Row>
       </main>
     );

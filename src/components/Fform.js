@@ -42,7 +42,14 @@ export default class Fform extends Component {
             this.setState({ wData: res.data });
             console.log(res.data);
           })
-          .catch((err) => console.log("errrrrrrrrrrrrror"));
+          .catch((err) => {
+            this.setState({
+              errExists: true,
+              errMessage:
+                "Please check your entry, not found: " + err.response.status,
+            });
+            console.log("errrrrrrrrrrrrror");
+          });
       })
       .catch((err) => {
         if (err.response) {

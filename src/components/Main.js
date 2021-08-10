@@ -29,7 +29,7 @@ export default class Main extends Component {
     if (this.state.errExists) {
       this.setState({
         shCity: false,
-        shWeather: true,
+        shWeather: false,
       });
     } else {
       this.setState({
@@ -37,8 +37,8 @@ export default class Main extends Component {
         shWeather: true,
       });
     }
-    console.log(this.state.wData.length);
-    console.log(this.state.wData);
+    console.log(this.state);
+
   };
   render() {
     return (

@@ -13,8 +13,7 @@ export default class Main extends Component {
       display_name: "",
       lon: "",
       lat: "",
-      shErr: false,
-      cityName: "",
+      input: "",
       errExists: false,
       errMessage: "",
       shCity: false,
@@ -26,19 +25,20 @@ export default class Main extends Component {
     this.setState({
       ...obj,
     });
-    if (this.state.errExists) {
-      this.setState({
-        shCity: false,
-        shWeather: false,
-      });
-    } else {
-      this.setState({
-        shCity: true,
-        shWeather: true,
-      });
-    }
-    console.log(this.state);
-
+    // if (this.state.shCity) {
+    //   this.setState({
+    //     shCity: true,
+    //   });
+    // } else {
+    //   this.setState({
+    //     shCity: false,
+    //   });
+    // }
+    // if (this.state.shWeather) {
+    //   this.setState({
+    //     shWeather: true,
+    //   });
+    // }
   };
   render() {
     return (
@@ -57,7 +57,7 @@ export default class Main extends Component {
           ) : undefined}
         </Row>
 
-        <Weather data={this.state.wData} shW={this.state.shCity}/>
+        {this.state.shWeather ? <Weather data={this.state.wData} shW={this.state.shCity} /> : undefined}
 
         <Row>{!this.state.shCity ? <Banner /> : undefined}</Row>
       </main>

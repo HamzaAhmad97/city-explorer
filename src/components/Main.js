@@ -5,7 +5,8 @@ import Banner from "./Banner";
 import City from "./City";
 import Err from "./Err";
 import Weather from "./Weather";
-//import Weather from "./Weather";
+import Movies from './Movies';
+//import Weather from './Weather';
 export default class Main extends Component {
   constructor() {
     super();
@@ -19,26 +20,15 @@ export default class Main extends Component {
       shCity: false,
       shWeather: false,
       wData: [],
+      mData: [],
+      shMovies: false,
     };
   }
   getCityData = (obj) => {
     this.setState({
       ...obj,
     });
-    // if (this.state.shCity) {
-    //   this.setState({
-    //     shCity: true,
-    //   });
-    // } else {
-    //   this.setState({
-    //     shCity: false,
-    //   });
-    // }
-    // if (this.state.shWeather) {
-    //   this.setState({
-    //     shWeather: true,
-    //   });
-    // }
+    console.log(this.state);
   };
   render() {
     return (
@@ -57,8 +47,10 @@ export default class Main extends Component {
           ) : undefined}
         </Row>
 
-        {this.state.shWeather ? <Weather data={this.state.wData} shW={this.state.shCity} /> : undefined}
-
+        {this.state.shWeather ? (
+          <Weather data={this.state.wData} shW={this.state.shCity} />
+        ) : undefined}
+        {!this.state.mData.length ? undefined : <Movies  data={this.state.mData} shM={this.state.shM}/>}
         <Row>{!this.state.shCity ? <Banner /> : undefined}</Row>
       </main>
     );

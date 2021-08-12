@@ -18,6 +18,8 @@ export default class Fform extends Component {
       wData: [],
       shWeather: false,
       shCity: false,
+      mData: [],
+      shMovies: false,
     };
   }
   handleSubmit = (e) => {
@@ -41,8 +43,7 @@ export default class Fform extends Component {
             shCity: false,
             shWeather: false,
             errExists: true,
-            errMessage:
-              "Please check your entry, not found. ",
+            errMessage: "Please check your entry, not found. ",
           });
         }
       });
@@ -55,7 +56,8 @@ export default class Fform extends Component {
     axios
       .get(urlW)
       .then((res) => {
-        this.setState({ wData: res.data, shWeather:true });
+        this.setState({ wData: res.data, shWeather: true });
+        console.log(this.state.wData);
       })
       .catch((err) => {
         this.setState({
@@ -63,9 +65,31 @@ export default class Fform extends Component {
           errExists: true,
           errMessage: "Error retreiving weather data. ",
         });
-        console.log(err);
+      });
+    this.showMovies();
+  };
+
+  showMovies = () => {
+    let urlM = `http://localhost:8080/movies?cityName=${this.state.input}`;
+    axios
+      .get(urlM)
+      .then((res) => {
+        
+        this.setState({
+          mData: res.data.map(itm => itm.title),
+          shMovies: true,
+        });
+        console.log(this.state.mData);
+      })
+      .catch((err) => {
+        this.setState({
+          shMovies: false,
+          errExists: true,
+          errMessage: "Error retreiving movies data. ",
+        });
       });
   };
+
   handleInput = (e) => {
     this.setState({
       input: e.target.value,

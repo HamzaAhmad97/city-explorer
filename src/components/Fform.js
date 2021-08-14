@@ -68,7 +68,7 @@ export default class Fform extends Component {
   };
 
   getWeather = () => {
-    let weatherURL = `http://localhost:8080/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.cityEntry}`;
+    let weatherURL = `https://ce-api-ha.herokuapp.com/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.cityEntry}`;
     axios
       .get(weatherURL)
       .then((res) => {
@@ -97,7 +97,7 @@ export default class Fform extends Component {
   };
 
   getMovies = () => {
-    let moviesURL = `http://localhost:8080/movies?cityName=${this.state.cityEntry}`;
+    let moviesURL = `https://ce-api-ha.herokuapp.com/movies?cityName=${this.state.cityEntry}`;
     axios
       .get(moviesURL)
       .then((res) => {

@@ -1,57 +1,92 @@
 import React, { Component } from "react";
 import { Row } from "react-bootstrap";
 import Fform from "./Fform";
-import Banner from "./Banner";
+//import Banner from "./Banner";
 import City from "./City";
 import Err from "./Err";
 import Weather from "./Weather";
-import Movies from './Movies';
+import Movies from "./Movies";
 //import Weather from './Weather';
 export default class Main extends Component {
   constructor() {
     super();
     this.state = {
+      input: "",
+
       display_name: "",
       lon: "",
       lat: "",
-      input: "",
-      errExists: false,
-      errMessage: "",
-      shCity: false,
-      shWeather: false,
+
+      locationErr: false,
+      weatherErr: false,
+      moviesErr: false,
+
       wData: [],
+
       mData: [],
-      shMovies: false,
+
+      loading: false,
     };
   }
-  getCityData = (obj) => {
+  getDataFromDataHandler = (obj) => {
+    this.setState({ ...obj });
     this.setState({
-      ...obj,
+      locationErr: {
+        status: this.state.locationErr,
+        msg: "could not get location data, please try again.",
+      },
+      weatherErr: {
+        status: this.state.weatherErr,
+        msg: "could not get weather data, please try again.",
+      },
+      moviesErr: {
+        status: this.state.moviesErr,
+        msg: "could not get movies data, please try again.",
+      },
     });
-    console.log(this.state);
+  };
+
+  handleLoading = () => {
+    this.setState({ loading: true });
   };
   render() {
+    let locErr = this.state.locationErr.status;
+    let wetErr = this.state.weatherErr.status;
+    let movErr = this.state.moviesErr.status;
     return (
       <main className="w-75 m-auto ">
         <Row>
-          <Fform getCityData={this.getCityData} />
+          <Fform
+            sendDataToMain={this.getDataFromDataHandler}
+            handleLoading={this.handleLoading}
+          />
         </Row>
-        <Row>{this.state.errExists ? <Err /> : undefined}</Row>
         <Row>
-          {this.state.shCity ? (
+          {!(locErr && wetErr && movErr) ? (
+            <Err
+              errType={[
+                this.state.locationErr,
+                this.state.moviesErr,
+                this.state.weatherErr,
+              ]}
+            />
+          ) : undefined}
+        </Row>
+        <Row>
+          {!locErr ? (
             <City
               lon={this.state.lon}
               lat={this.state.lat}
               display_name={this.state.display_name}
+              show={this.state.display_name.length}
+              loading={this.state.loading}
             />
           ) : undefined}
         </Row>
 
-        {this.state.shWeather ? (
-          <Weather data={this.state.wData} shW={this.state.shCity} />
-        ) : undefined}
-        {!this.state.mData.length ? undefined : <Movies  data={this.state.mData} shM={this.state.shM}/>}
-        <Row>{!this.state.shCity ? <Banner /> : undefined}</Row>
+        {!wetErr ? <Weather data={this.state.wData} /> : undefined}
+        {!movErr ? <Movies data={this.state.mData} /> : undefined}
+        {/* <Row>{!(locErr && movErr && wetErr) ? <Banner /> : undefined}</Row> */}
       </main>
     );
   }

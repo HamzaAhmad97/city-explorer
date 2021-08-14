@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
-import axios from "axios";
-import DataHandler from "./DataHandler";
+//import DataHandler from "./DataHandler";
+import axios from 'axios';
 require("dotenv").config();
 //const PORT = process.env.PORT;
 //const LIQ_TOKEN = process.env.LIQ_TOKEN;
@@ -10,70 +10,133 @@ export default class Fform extends Component {
     super();
     this.state = {
       input: "",
+      cityEntry: '',
+      locationErr: false,
+      weatherErr: false,
+      moviesErr: false,
+
       display_name: "",
-      lon: "",
       lat: "",
-      cityName: "",
-      errExists: false,
-      errMessage: "",
+      lon: "",
+
       wData: [],
-      shWeather: false,
-      shCity: false,
+
       mData: [],
-      shMovies: false,
 
       // send data to datahandler ?
       send: false,
+      new: false,
+      loading: true,
     };
   }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.setState({
-      send: true,
-    });
-    this.props.handleLoading();
+  //////////////////////////////////////////////////////////////////////////////////////
+  
+
+  getMap = (cityEntry) => {
+    this.setState({cityEntry: cityEntry, new: false});
+    this.props.sendDataToMain(this.state);
+
+    let url = `https://eu1.locationiq.com/v1/search.php?key=pk.4a782b6f22a6f448625817dfd828280a&q=${cityEntry}&format=json`;
+    axios
+      .get(url)
+      .then((res) => {
+        let { display_name, lat, lon } = res.data[0];
+        return { display_name, lat, lon };
+      })
+      .then(({ display_name, lat, lon }) => {
+        this.setState({
+          display_name: display_name,
+          lat: lat,
+          lon: lon,
+          locationErr: false,
+          weatherErr: false,
+          moviesErr: false,
+        });
+      })
+      .then((val) => {
+        //send data back to main
+        this.getWeather();
+      })
+      .catch((err) => {
+        this.setState({
+          locationErr: true,
+          weatherErr: false,
+          moviesErr: false,
+        });
+        this.props.sendDataToMain(this.state);
+      });
   };
 
   getWeather = () => {
-    let urlW = `http://localhost:8080/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.input}`;
+    let weatherURL = `http://localhost:8080/weather?lat=${this.state.lat}&lon=${this.state.lon}&searchQuery=${this.state.cityEntry}`;
     axios
-      .get(urlW)
+      .get(weatherURL)
       .then((res) => {
-        this.setState({ wData: res.data, shWeather: true });
+        let data = res.data;
+        return data;
+      })
+      .then((val) => {
+        this.setState({
+          wData: val,
+          locationErr: false,
+          weatherErr: false,
+          moviesErr: false,
+        });
+      })
+      .then((res) => {
+        this.getMovies();
       })
       .catch((err) => {
         this.setState({
-          shWeather: false,
-          errExists: true,
-          errMessage: "Error retreiving weather data. ",
+          locationErr: false,
+          weatherErr: true,
+          moviesErr: false,
         });
+        this.props.sendDataToMain(this.state);
       });
-    this.showMovies();
   };
 
-  showMovies = () => {
-    let urlM = `http://localhost:8080/movies?cityName=${this.state.input}`;
+  getMovies = () => {
+    let moviesURL = `http://localhost:8080/movies?cityName=${this.state.cityEntry}`;
     axios
-      .get(urlM)
+      .get(moviesURL)
       .then((res) => {
+        let data = res.data.map((itm) => itm.title);
+        return data;
+      })
+      .then((val) => {
         this.setState({
-          mData: res.data.map((itm) => itm.title),
-          shMovies: true,
+          mData: val,
+          locationErr: false,
+          weatherErr: false,
+          moviesErr: false,
         });
+      })
+      .then((res) => {
+        this.setState({new: true});
+        this.props.sendDataToMain(this.state);
       })
       .catch((err) => {
         this.setState({
-          shMovies: false,
-          errExists: true,
-          errMessage: "Error retreiving movies data. ",
+          locationErr: false,
+          weatherErr: false,
+          moviesErr: true,
         });
+        this.props.sendDataToMain(this.state);
       });
+  };
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.handleLoading(true);
+    this.getMap(this.state.input);
   };
 
   handleInput = (e) => {
     this.setState({
       input: e.target.value,
     });
+ 
   };
   render() {
     return (
@@ -95,12 +158,12 @@ export default class Fform extends Component {
             Explore!
           </Button>
         </Form>
-        {this.state.send ? (
+        {/* {this.state.send ? (
           <DataHandler
             cityEntry={this.state.input}
             sendDataToMain={this.props.sendDataToMain}
           />
-        ) : undefined}
+        ) : undefined} */}
       </div>
     );
   }

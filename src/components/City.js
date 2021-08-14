@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, Container, Col } from "react-bootstrap";
 export default class City extends Component {
   render() {
+    console.log(this.props.show, '   ', this.props.loading);
     return (
       <Container
         className={

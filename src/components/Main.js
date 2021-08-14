@@ -7,6 +7,7 @@ import Err from "./Err";
 import Weather from "./Weather";
 import Movies from "./Movies";
 //import Weather from './Weather';
+
 export default class Main extends Component {
   constructor() {
     super();
@@ -87,8 +88,8 @@ export default class Main extends Component {
           ) : undefined}
         </Row>
 
-        {!wetErr ? <Weather data={this.state.wData} /> : undefined}
-        {!movErr ? <Movies data={this.state.mData} /> : undefined}
+        {!locErr ? <Weather data={this.state.wData} /> : undefined}
+        {!locErr ? <Movies data={this.state.mData} /> : undefined}
         {/* <Row>{!(locErr && movErr && wetErr) ? <Banner /> : undefined}</Row> */}
       </main>
     );

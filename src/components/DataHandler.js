@@ -20,11 +20,10 @@ export default class DataHandler extends Component {
       mData: [],
     };
   }
-  componentDidMount() {
-    this.getMap(this.props.cityEntry);
-    this.getWeather();
-  }
-
+   componentDidMount() {
+     this.getMap(this.props.cityEntry);
+   }
+ 
   getMap = (cityEntry) => {
     let url = `https://eu1.locationiq.com/v1/search.php?key=pk.4a782b6f22a6f448625817dfd828280a&q=${cityEntry}&format=json`;
     axios
@@ -39,8 +38,8 @@ export default class DataHandler extends Component {
           lat: lat,
           lon: lon,
           locationErr: false,
-          weatherErr: true,
-          moviesErr: true,
+          weatherErr: false,
+          moviesErr: false,
         });
       })
       .then((val) => {
@@ -50,9 +49,10 @@ export default class DataHandler extends Component {
       .catch((err) => {
         this.setState({
           locationErr: true,
-          weatherErr: true,
-          moviesErr: true,
+          weatherErr: false,
+          moviesErr: false,
         });
+        this.props.sendDataToMain(this.state);
       });
   };
 
@@ -69,7 +69,7 @@ export default class DataHandler extends Component {
           wData: val,
           locationErr: false,
           weatherErr: false,
-          moviesErr: true,
+          moviesErr: false,
         });
       })
       .then((res) => {
@@ -79,8 +79,9 @@ export default class DataHandler extends Component {
         this.setState({
           locationErr: false,
           weatherErr: true,
-          moviesErr: true,
+          moviesErr: false,
         });
+        this.props.sendDataToMain(this.state);
       });
   };
 
@@ -109,9 +110,16 @@ export default class DataHandler extends Component {
           weatherErr: false,
           moviesErr: true,
         });
+        this.props.sendDataToMain(this.state);
       });
   };
   render() {
+    if (this.props.cityEntry !== this.state.cityEntry) {
+      this.getMap(this.props.cityEntry);
+      this.setState({
+        cityEntry: this.props.cityEntry,
+      });
+    }
     return <></>;
   }
 }

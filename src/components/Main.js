@@ -26,6 +26,7 @@ export default class Main extends Component {
       mData: [],
 
       loading: false,
+      new: false,
     };
   }
   getDataFromDataHandler = (obj) => {
@@ -33,32 +34,34 @@ export default class Main extends Component {
     this.setState({
       locationErr: {
         status: this.state.locationErr,
-        msg: "could not get location data, please try again.",
+        msg: "Could not get location data or location does not exist, please try again  ",
       },
       weatherErr: {
         status: this.state.weatherErr,
-        msg: "could not get weather data, please try again.",
+        msg: "Could not get weather data or location does not exist, please try again  ",
       },
       moviesErr: {
         status: this.state.moviesErr,
-        msg: "could not get movies data, please try again.",
+        msg: "Could not get movies data or location does not exist, please try again  ",
       },
     });
   };
 
-  handleLoading = () => {
-    this.setState({ loading: true });
+  handleLoading = (stat) => {
+    this.setState({ loading: stat
+     });
   };
   render() {
     let locErr = this.state.locationErr.status;
     let wetErr = this.state.weatherErr.status;
     let movErr = this.state.moviesErr.status;
     return (
-      <main className="w-75 m-auto ">
+      <main className="w-75 m-auto " style={{ minHeight: "83vh" }}>
         <Row>
           <Fform
             sendDataToMain={this.getDataFromDataHandler}
             handleLoading={this.handleLoading}
+            n = {this.state.new}
           />
         </Row>
         <Row>
@@ -78,7 +81,7 @@ export default class Main extends Component {
               lon={this.state.lon}
               lat={this.state.lat}
               display_name={this.state.display_name}
-              show={this.state.display_name.length}
+              show={this.state.new }
               loading={this.state.loading}
             />
           ) : undefined}

@@ -7,6 +7,7 @@ import Err from "./Err";
 import Weather from "./Weather";
 import Movies from "./Movies";
 //import Weather from './Weather';
+
 export default class Main extends Component {
   constructor() {
     super();

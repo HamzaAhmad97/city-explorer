@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row } from "react-bootstrap";
-
+import WeatherDay from "./WeatherDay";
 export default class Weather extends Component {
   render() {
     return (
@@ -17,37 +17,8 @@ export default class Weather extends Component {
         </Row>
         {this.props.data.length !== 0
           ? this.props.data.map((itm, i) => {
-              return (
-                <div
-                  key={i ** 2}
-                  className=" col-xl-3 p-0 "
-                  style={{ borderRadius: "25px", margin: "0rem" }}
-                >
-                  <h3
-                    className="text-center m-3 "
-                    style={{
-                      backgroundColor: "#000112",
-                      color: "white",
-                      padding: "0.5rem 0",
-                      borderRadius: " 15px 15px 0 0",
-                    }}
-                  >
-                    {" "}
-                    Date: {itm.date}
-                  </h3>
-                  <p
-                    className="text-center m-3"
-                    style={{
-                      fontWeight: "bold",
-                      padding: "0.5rem 0.5rem",
-                      borderRadius: " 0 0 15px 15px",
-                    }}
-                  >
-                    {itm.description}
-                  </p>
-                </div>
-              );
-            })
+            return (<WeatherDay key={i ** 2} date={itm.date} description={itm.description} />);
+          })
           : undefined}
       </Row>
     );

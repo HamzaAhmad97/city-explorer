@@ -158,12 +158,6 @@ export default class Fform extends Component {
             Explore!
           </Button>
         </Form>
-        {/* {this.state.send ? (
-          <DataHandler
-            cityEntry={this.state.input}
-            sendDataToMain={this.props.sendDataToMain}
-          />
-        ) : undefined} */}
       </div>
     );
   }
